@@ -152,23 +152,6 @@ const BACKEND_API = {
     baseUrl: (typeof window !== 'undefined' && window.location && window.location.protocol.startsWith('http') && window.location.port === '3000') ? '' : 'http://localhost:3000',
     isOnline: false,
 
-    updateUIStatus(online, text) {
-        const dot = document.getElementById('backendStatusDot');
-        const label = document.getElementById('backendStatusText');
-        const pill = document.getElementById('backendConnectionBadge');
-        if (dot) {
-            dot.className = online ? 'backend-pulse-dot online' : 'backend-pulse-dot offline';
-        }
-        if (label) {
-            label.textContent = text;
-        }
-        if (pill) {
-            pill.title = online 
-                ? 'Backend Server Connected (http://localhost:3000) - Data Persisted in backend/data/' 
-                : 'Backend Server Offline - Click to Retry. (Run "npm start" or "node backend/server.js")';
-        }
-    },
-
     async checkHealth() {
         try {
             const controller = new AbortController();
@@ -178,13 +161,11 @@ const BACKEND_API = {
             if (res.ok) {
                 const data = await res.json();
                 this.isOnline = true;
-                this.updateUIStatus(true, "Backend Online (Port 3000)");
                 console.log("🌐 Connected to MRDU Backend Server:", data);
                 return true;
             }
         } catch (e) {
             this.isOnline = false;
-            this.updateUIStatus(false, "Standalone / Offline Mode");
         }
         return false;
     },
@@ -938,30 +919,6 @@ function initApp() {
                 });
                 BACKEND_API.syncAttempts().then(atts => {
                     if (atts && typeof updateAdminStats === 'function') updateAdminStats();
-                });
-            }
-        });
-    }
-
-    // Interactive connection badge click to check / reconnect
-    const badge = document.getElementById('backendConnectionBadge');
-    if (badge) {
-        badge.addEventListener('click', () => {
-            if (typeof BACKEND_API !== 'undefined') {
-                BACKEND_API.updateUIStatus(false, "Checking Server...");
-                BACKEND_API.checkHealth().then(online => {
-                    if (online) {
-                        BACKEND_API.syncStudents();
-                        BACKEND_API.syncQuestions().then(qs => {
-                            if (qs && typeof setupAdminTable === 'function') setupAdminTable();
-                        });
-                        BACKEND_API.syncAttempts().then(atts => {
-                            if (atts && typeof updateAdminStats === 'function') updateAdminStats();
-                        });
-                        showAntiCheatToast("🟢 Backend Server Connected (Port 3000)!");
-                    } else {
-                        showAntiCheatToast("⚠️ Backend is offline. Run 'npm start' or 'node backend/server.js'");
-                    }
                 });
             }
         });
