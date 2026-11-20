@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Reddy (MR) Deemed To Be University | Online Examination Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Ambient Background Lighting for Animated Glassmorphism -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+    <div class="bg-shape shape-4"></div>
+
+    <!-- Anti-Cheat Warning Toast Banner -->
+    <div class="anti-cheat-toast hidden" id="antiCheatToast">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="antiCheatToastMsg">Warning: Tab switching or sliding away is strictly prohibited!</span>
+    </div>
+
+    <!-- Live Backend Connection Status Pill (Interactive) -->
+    <div class="backend-connection-badge" id="backendConnectionBadge" title="Click to verify backend connection">
+        <span class="backend-pulse-dot offline" id="backendStatusDot"></span>
+        <span id="backendStatusText">Checking Server...</span>
+    </div>
+
+    <div class="app-container">
+
+        <!-- ================= SCREEN 1: UNIVERSITY WELCOME SCREEN ================= -->
+        <section class="portal-screen welcome-screen" id="welcomeScreen">
+            <div class="welcome-card">
+                <div class="univ-emblem-wrapper">
+                    <img src="mrdu-logo.png" alt="Malla Reddy (MR) Deemed To Be University" class="univ-emblem-img">
+                </div>
+
+                <h1 class="welcome-title">Welcome to Malla Reddy (MR) Deemed To Be University</h1>
+                <p class="welcome-desc">
+                    Directorate of Evaluation & Examinations. Secure, automated assessment platform for end-semester
+                    evaluations and real-time performance analytics.
+                </p>
+
+                <!-- Exam Features Grid -->
+                <div class="features-preview-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div class="feature-info">
+                            <strong>Live Circular Gauge</strong>
+                            <span>Real-time completion tracking</span>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon"><i class="fa-solid fa-award"></i></div>
+                        <div class="feature-info">
+                            <strong>Instant SGPA & Grade</strong>
+                            <span>Subject breakdown & solutions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="welcome-action-group">
+                    <button class="btn-proceed" id="btnGoToRegister">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Student Registration</span>
+                    </button>
+                    <button class="btn-secondary-welcome" id="btnGoToLogin">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        <span>Candidate / Admin Login</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 2: STUDENT REGISTRATION SCREEN (DEDICATED NEW PAGE) ================= -->
+        <section class="portal-screen registration-screen hidden" id="registrationScreen">
+            <div class="registration-card">
+                <div class="login-header">
+                    <button class="btn-back-welcome" id="btnBackToWelcomeFromReg" title="Back to Welcome">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="brand-header-flex login-brand-center">
+                        <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                        <span class="brand-logo">MRDU</span>
+                    </div>
+                </div>
+
+                <div class="reg-page-title-box">
+                    <h2 class="login-title">Student Examination Registration</h2>
+                    <p class="login-subtitle">Register your details before appearing for the university online assessment. Create your own password for login.</p>
+                </div>
+
+                <form id="studentRegisterForm" onsubmit="event.preventDefault(); handleCandidateRegister();">
+                    <div class="form-grid-2col">
+                        <div class="form-group">
+                            <label for="regCandidateName">
+                                <i class="fa-regular fa-user"></i> Candidate Full Name
+                            </label>
+                            <input type="text" id="regCandidateName" class="form-control"
+                                placeholder="Enter Candidate Full Name (e.g. Vadla Bharath Chary)" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regRollNumber">
+                                <i class="fa-solid fa-id-card"></i> Roll Number
+                            </label>
+                            <input type="text" id="regRollNumber" class="form-control"
+                                placeholder="Enter Roll Number" required maxlength="11" autocomplete="off"
+                                style="text-transform: uppercase; font-family: monospace; font-weight: 700; letter-spacing: 0.5px;">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regDepartment">
+                                <i class="fa-solid fa-building-columns"></i> Branch / Specialization
+                            </label>
+                            <select id="regDepartment" class="form-control" required>
+                                <option value="CSE - Computer Science & Engineering">CSE - Computer Science & Engineering</option>
+                                <option value="CSE Data Science">CSE Data Science</option>
+                                <option value="Cyber Security">Cyber Security</option>
+                                <option value="Aeronautical Engineering">Aeronautical Engineering</option>
+                                <option value="EEE - Electrical & Electronics Engineering">EEE - Electrical & Electronics Engineering</option>
+                                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regPassword">
+                                <i class="fa-solid fa-lock"></i> Create Password
+                            </label>
+                            <div class="password-input-wrapper">
+                                <input type="password" id="regPassword" class="form-control"
+                                    placeholder="Create your own password" required minlength="4" autocomplete="new-password">
+                                <button type="button" class="btn-toggle-pwd" id="btnToggleRegPwd" title="Show/Hide Password">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                            <small class="form-hint">Create your own secure password for login.</small>
+                        </div>
+                    </div>
+
+                    <div id="registerErrorMsg" class="login-error hidden">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="registerErrorText">Please fill valid registration details!</span>
+                    </div>
+
+                    <div class="login-btn-group">
+                        <button type="submit" class="btn-login-submit" id="btnRegisterSubmit">
+                            <span>Complete Registration & Go to Login</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="mode-switch-footer">
+                        <span>Already registered?</span>
+                        <button type="button" class="btn-link-switch" id="btnGoToLoginFromReg">
+                            <span>Sign in directly to exam</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 3: LOGIN SCREEN (CANDIDATE & EXAMINER ADMIN) ================= -->
+        <section class="portal-screen login-screen hidden" id="loginScreen">
+            <div class="login-card">
+                <div class="login-header">
+                    <button class="btn-back-welcome" id="btnBackToWelcome" title="Back to Welcome">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="brand-header-flex login-brand-center">
+                        <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                        <span class="brand-logo">MRDU</span>
+                    </div>
+                </div>
+
+                <!-- Login Tabs: Candidate vs Examiner/Admin with Sliding Pill -->
+                <div class="login-tabs" id="loginTabs">
+                    <div class="tab-slider-pill" id="tabSliderPill"></div>
+                    <button type="button" class="login-tab-btn active" id="tabCandidateBtn">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>Candidate Login</span>
+                    </button>
+                    <button type="button" class="login-tab-btn" id="tabExaminerBtn">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>Examiner / Admin</span>
+                    </button>
+                </div>
+
+                <!-- 1. Candidate Login Form -->
+                <div class="login-body" id="candidateLoginTabContent">
+                    <h2 class="login-title">Student Examination Login</h2>
+                    <p class="login-subtitle">Enter your roll number and password, then solve the security verification CAPTCHA.</p>
+
+                    <!-- Registration Success Alert Banner -->
+                    <div id="loginSuccessBanner" class="login-success-banner hidden">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div id="loginSuccessBannerText">Registration Successful! Please sign in below with your credentials.</div>
+                    </div>
+
+                    <form id="studentLoginForm" onsubmit="event.preventDefault(); handleCandidateLogin();">
+                        <div class="form-grid-2col">
+                            <div class="form-group">
+                                <label for="studentUsernameInput">
+                                    <i class="fa-solid fa-id-card"></i> Username / Roll Number
+                                </label>
+                                <input type="text" id="studentUsernameInput" class="form-control"
+                                    placeholder="Enter Roll Number" required autocomplete="username" maxlength="11"
+                                    style="text-transform: uppercase; font-family: monospace; font-weight: 700; letter-spacing: 0.5px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="studentPasswordInput">
+                                    <i class="fa-solid fa-lock"></i> Password
+                                </label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="studentPasswordInput" class="form-control"
+                                        placeholder="Enter your password" required autocomplete="current-password">
+                                    <button type="button" class="btn-toggle-pwd" id="btnToggleLoginPwd" title="Show/Hide Password">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CAPTCHA Verification Area -->
+                        <div class="form-group captcha-group">
+                            <label for="captchaInput">
+                                <i class="fa-solid fa-shield-halved"></i> Security Verification CAPTCHA
+                            </label>
+                            <div class="captcha-box-wrapper">
+                                <div class="captcha-display" id="captchaDisplay" title="Security Code">
+                                    <span id="captchaCode">A8K9X</span>
+                                </div>
+                                <button type="button" class="btn-refresh-captcha" id="btnRefreshCaptcha"
+                                    title="Generate New Captcha">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                            </div>
+                            <input type="text" id="captchaInput" class="form-control"
+                                placeholder="Type the characters shown above" required maxlength="6" autocomplete="off">
+                        </div>
+
+                        <div id="candidateErrorMsg" class="login-error hidden">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span id="candidateErrorText">Please fill all details correctly!</span>
+                        </div>
+
+                        <div class="login-btn-group">
+                            <button type="submit" class="btn-login-submit" id="btnCandidateSubmit">
+                                <span>Verify & Continue to Instructions</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="mode-switch-footer">
+                            <span>Need to register first?</span>
+                            <button type="button" class="btn-link-switch" id="btnGoToRegisterFromLogin">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <span>Go to Student Registration</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. Examiner / Admin Login Form -->
+                <div class="login-body hidden" id="examinerLoginTabContent">
+                    <h2 class="login-title">Examiner / Admin Portal</h2>
+                    <p class="login-subtitle">Sign in with administrator credentials to manage examination papers,
+                        monitoring, and stats.</p>
+
+                    <form id="adminLoginForm" onsubmit="event.preventDefault(); handleExaminerLogin();">
+                        <div class="form-grid-2col">
+                            <div class="form-group">
+                                <label for="adminUsernameInput">
+                                    <i class="fa-solid fa-user-tie"></i> Examiner / Admin ID
+                                </label>
+                                <input type="text" id="adminUsernameInput" class="form-control" placeholder="Enter Admin ID"
+                                    required autocomplete="username">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adminPasswordInput">
+                                    <i class="fa-solid fa-lock"></i> Admin Password
+                                </label>
+                                <input type="password" id="adminPasswordInput" class="form-control"
+                                    placeholder="Enter Admin Password" required autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <div id="examinerErrorMsg" class="login-error hidden">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <span id="examinerErrorText">Invalid admin credentials!</span>
+                        </div>
+
+                        <div class="login-btn-group">
+                            <button type="submit" class="btn-login-submit" id="btnExaminerSubmit">
+                                <span>Sign In as Examiner</span>
+                                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 3: EXAM INSTRUCTIONS SCREEN ================= -->
+        <section class="portal-screen instructions-screen hidden" id="instructionsScreen">
+            <div class="instructions-card">
+                <div class="instructions-header">
+                    <div class="inst-hero-badge">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                    </div>
+                    <h1 class="inst-title">Examination Guidelines & Rules</h1>
+                    <p class="inst-subtitle">Please carefully read the following instructions before starting your test
+                        session.</p>
+                </div>
+
+                <!-- Rules Highlights Box -->
+                <div class="rules-container">
+
+                    <!-- Rule 1: Marking Scheme -->
+                    <div class="rule-box rule-positive">
+                        <div class="rule-icon"><i class="fa-solid fa-check-double"></i></div>
+                        <div class="rule-details">
+                            <h3>Marking Scheme</h3>
+                            <p>Each question carries <strong>1 Mark (+1)</strong>. There is <strong>NO negative
+                                    marking</strong> for incorrect or unattempted questions.</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 2: Mandatory Live Camera Proctoring (Camera Must Be ON) -->
+                    <div class="rule-box rule-camera">
+                        <div class="rule-icon"><i class="fa-solid fa-video"></i></div>
+                        <div class="rule-details">
+                            <h3>Mandatory Live Camera Proctoring (Camera Must Be ON)</h3>
+                            <p><strong>Your webcam / camera must be turned ON and active</strong> to start and appear for the exam. The assessment will <strong>NOT start</strong> without camera permission. Your face must remain clearly visible within the proctoring frame at all times.</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 3: Strict No Sliding / No Back / No Tab Switch -->
+                    <div class="rule-box rule-negative">
+                        <div class="rule-icon"><i class="fa-solid fa-ban"></i></div>
+                        <div class="rule-details">
+                            <h3>Strict Anti-Cheat & Navigation Policy</h3>
+                            <p><strong>Do NOT slide, go back, switch browser tabs, or refresh the page</strong> once the
+                                exam begins. Any attempt to navigate back or leave the test screen will trigger an alert
+                                and may auto-submit your exam.</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 4: Time & Gauge -->
+                    <div class="rule-box rule-info">
+                        <div class="rule-icon"><i class="fa-regular fa-clock"></i></div>
+                        <div class="rule-details">
+                            <h3>Duration & Real-Time Tracking</h3>
+                            <p>Total time is <strong>15 Minutes (15:00)</strong>. The circular progress gauge
+                                dynamically tracks your completed questions. When time expires, your answers are
+                                automatically submitted.</p>
+                        </div>
+                    </div>
+
+                    <!-- Rule 5: Review and Palette -->
+                    <div class="rule-box rule-neutral">
+                        <div class="rule-icon"><i class="fa-solid fa-table-cells"></i></div>
+                        <div class="rule-details">
+                            <h3>Navigation & Question Palette</h3>
+                            <p>You can use the bottom numbers or the right-side question palette to jump between
+                                questions. You may mark any question for review or clear your answer choice anytime
+                                before final submission.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Live Webcam Verification Box -->
+                <div class="cam-verification-card" id="camVerificationCard">
+                    <div class="cam-preview-container">
+                        <video id="instCamVideo" autoplay playsinline muted class="cam-preview-video hidden"></video>
+                        <div class="cam-placeholder" id="camPlaceholder">
+                            <i class="fa-solid fa-video-slash"></i>
+                            <span>Camera is currently OFF</span>
+                        </div>
+                        <div class="cam-live-indicator hidden" id="camLiveIndicator">
+                            <span class="live-dot"></span> LIVE PROCTORING
+                        </div>
+                    </div>
+                    <div class="cam-verify-details">
+                        <div class="cam-status-pill status-off" id="camStatusPill">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                            <span id="camStatusText">Camera Permission Required to Start Exam</span>
+                        </div>
+                        <h4>Webcam Hardware & Proctoring Readiness</h4>
+                        <p>University proctoring regulations mandate an active camera before launching the assessment. Click below to enable and test your camera.</p>
+                        <button type="button" class="btn-enable-cam" id="btnToggleCamera">
+                            <i class="fa-solid fa-video"></i>
+                            <span id="btnToggleCameraText">Turn ON Camera & Verify</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Candidate Checkbox Agreement (Unlocked only when Camera is Verified) -->
+                <div class="inst-agreement-box agreement-locked" id="instAgreementBox">
+                    <label class="checkbox-container" id="lblAgreement">
+                        <input type="checkbox" id="chkAgreement" disabled>
+                        <span class="custom-checkmark"></span>
+                        <span class="agreement-text">
+                            I have read, understood, and agreed to follow all examination rules. I acknowledge that my camera must remain ON throughout the test, and sliding, pressing back, or leaving the window is strictly prohibited.
+                        </span>
+                    </label>
+                    <div class="agreement-lock-indicator">
+                        <span class="cam-lock-badge badge-locked" id="camLockBadge">
+                            <i class="fa-solid fa-lock"></i> Camera verification required to enable checkbox
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Instructions Action Buttons -->
+                <div class="inst-actions">
+                    <button class="btn-secondary" id="btnCancelInstructions">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Cancel & Logout</span>
+                    </button>
+                    <button class="btn-start-exam" id="btnStartExamNow" disabled>
+                        <span>Start Examination Now</span>
+                        <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 4: EXAMINER / ADMIN DASHBOARD (PAGE 5 & 8 STYLE) ================= -->
+        <section class="portal-screen admin-dashboard-screen hidden" id="adminDashboardScreen">
+            <div class="admin-dashboard-card">
+                <div class="admin-top-bar">
+                    <div class="admin-title-area">
+                        <div class="brand-header-flex">
+                            <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                            <span class="brand-logo">MRDU</span>
+                        </div>
+                        <span class="admin-tagline">Examiner & Admin Control Center</span>
+                    </div>
+                    <div class="admin-user-info">
+                        <span class="admin-badge"><i class="fa-solid fa-shield"></i> Authorized Examiner</span>
+                        <button class="btn-admin-logout" id="btnAdminLogout">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin KPI Cards (Page 5 Style) -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon stat-blue"><i class="fa-solid fa-user-graduate"></i></div>
+                        <div class="admin-stat-content">
+                            <span>Total Attempted</span>
+                            <h3 id="adminStatTotalAttempts">12 Students</h3>
+                            <small id="adminStatTotalAttemptsSub">Submissions recorded</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon stat-green"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="admin-stat-content">
+                            <span>Average Score</span>
+                            <h3 id="adminStatAvgScore">7.8 / 10</h3>
+                            <small id="adminStatAvgScoreSub">Class mean accuracy</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon stat-purple"><i class="fa-solid fa-certificate"></i></div>
+                        <div class="admin-stat-content">
+                            <span>Pass Rate</span>
+                            <h3 id="adminStatPassRate">91.7%</h3>
+                            <small id="adminStatPassRateSub">≥ 50% Marks</small>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-icon stat-blue"><i class="fa-solid fa-file-circle-question"></i></div>
+                        <div class="admin-stat-content">
+                            <span>Total Questions</span>
+                            <h3 id="adminStatTotalQuestions">10 Questions</h3>
+                            <small id="adminStatTotalQuestionsSub">Active Question Bank</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Tab Switcher: Student Attempts vs Question Repository -->
+                <div class="admin-sub-tabs">
+                    <button type="button" class="admin-tab-btn active" id="adminTabAttemptsBtn">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Candidate Attempted List (<span id="adminAttemptedCountBadge">12</span>)</span>
+                    </button>
+                    <button type="button" class="admin-tab-btn" id="adminTabQuestionsBtn">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span>Question Repository (<span id="adminQuestionsCountBadge">10</span>)</span>
+                    </button>
+                </div>
+
+                <!-- TAB 1: Candidates Attempted List Section -->
+                <div class="admin-tab-pane" id="adminAttemptsTabPane">
+                    <div class="admin-filter-bar">
+                        <div class="admin-search-wrapper">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="adminSearchStudent" class="admin-search-input"
+                                placeholder="Search candidate by username, name, or roll ID...">
+                        </div>
+                        <div class="admin-filter-actions">
+                            <select id="adminFilterGrade" class="admin-select">
+                                <option value="all">All Candidates</option>
+                                <option value="high">Top Scorers (≥ 80%)</option>
+                                <option value="pass">Passed Only (≥ 50%)</option>
+                                <option value="fail">Needs Improvement (< 50%)</option>
+                            </select>
+                            <button type="button" class="btn-admin-action" id="btnPrintAttempts" title="Print candidate list">
+                                <i class="fa-solid fa-print"></i>
+                                <span>Print List</span>
+                            </button>
+                            <button type="button" class="btn-admin-action btn-admin-reset" id="btnResetSeedData" title="Reset to sample candidate records">
+                                <i class="fa-solid fa-arrow-rotate-left"></i>
+                                <span>Reset Data</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="admin-table-section">
+                        <div class="admin-table-header">
+                            <h3><i class="fa-solid fa-graduation-cap"></i> Candidate Examination Submissions & Merit Records</h3>
+                            <span class="table-badge" id="adminFilteredCountBadge">Showing 12 Candidates</span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 70px;">Rank</th>
+                                        <th>Candidate Name</th>
+                                        <th>Student / Roll ID</th>
+                                        <th>Score</th>
+                                        <th>Percentage</th>
+                                        <th>Time Taken</th>
+                                        <th>Grade / SGPA</th>
+                                        <th>Submitted At</th>
+                                        <th>Status</th>
+                                        <th style="text-align: center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminAttemptsTableBody">
+                                    <!-- Populated dynamically by script.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: Question Bank Management Table (Page 5 Style) -->
+                <div class="admin-tab-pane hidden" id="adminQuestionsTabPane">
+                    <div class="admin-table-section">
+                        <div class="admin-table-header">
+                            <div>
+                                <h3><i class="fa-solid fa-list-check"></i> Live Examination Question Repository</h3>
+                                <p style="font-size: 12.5px; color: var(--text-muted); margin: 3px 0 0 0;">Manage and edit examination questions in real-time. Changes are immediately updated for students.</p>
+                            </div>
+                            <div class="admin-q-header-actions">
+                                <span class="table-badge"><i class="fa-solid fa-circle-check"></i> Live Bank</span>
+                                <button type="button" class="btn-add-q" id="btnAddQuestionBtn">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Add Question</span>
+                                </button>
+                                <button type="button" class="btn-reset-q" id="btnResetQuestionsBtn" title="Reset back to default 10 questions">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                    <span>Reset to Default</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 45px;">#</th>
+                                        <th style="width: 140px;">Category</th>
+                                        <th>Question & Options Preview</th>
+                                        <th style="width: 105px;">Correct Key</th>
+                                        <th style="width: 65px;">Marks</th>
+                                        <th style="width: 90px;">Status</th>
+                                        <th style="text-align: center; width: 140px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminQuestionsTableBody">
+                                    <!-- Populated dynamically by script.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 5: EXAM INTERFACE ================= -->
+        <div class="exam-wrapper hidden" id="examScreenWrapper">
+
+            <!-- TOP HEADER -->
+            <header class="top-nav">
+                <div class="logo-area">
+                    <div class="brand-header-flex">
+                        <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                        <span class="brand-logo">MRDU</span>
+                    </div>
+                    <span class="brand-tagline">Malla Reddy Deemed To Be University</span>
+                </div>
+
+                <!-- Central Countdown Timer -->
+                <div class="timer-badge" id="timerBadge">
+                    <i class="fa-regular fa-clock"></i>
+                    <span id="timerDisplay">15:00</span>
+                    <span class="timer-label">Time Left</span>
+                </div>
+
+                <!-- Logged-in User Profile & Submit Button -->
+                <div class="user-action-area">
+                    <div class="user-profile-pill">
+                        <div class="default-avatar-circle" id="headerUserAvatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name" id="headerUserName">Candidate</span>
+                            <span class="user-id" id="headerUserId">ID: 00000000</span>
+                        </div>
+                    </div>
+                    <button class="btn-submit-exam" id="btnSubmitTop">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Submit</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- MAIN EXAM VIEW -->
+            <main class="main-content" id="examView">
+
+                <!-- Left Area: Question & Options Card -->
+                <section class="card question-card">
+                    <div class="question-header">
+                        <div class="q-meta">
+                            <span class="q-badge" id="qCategoryBadge">Web Development</span>
+                            <h2 class="q-number" id="qNumberDisplay">Question 1 of 10</h2>
+                        </div>
+                        <div class="q-actions">
+                            <button class="btn-tool" id="btnReviewToggle" title="Mark for Review">
+                                <i class="fa-regular fa-bookmark"></i>
+                                <span id="reviewBtnText">Mark for Review</span>
+                            </button>
+                            <button class="btn-tool btn-tool-danger" id="btnClearChoice" title="Clear selection">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Prompt -->
+                    <div class="question-body">
+                        <p class="question-title" id="questionText">
+                            Which of the following is a popular programming language for developing interactive and
+                            multimedia web pages?
+                        </p>
+                    </div>
+
+                    <!-- Answer Choices (Grid Layout) -->
+                    <div class="options-grid" id="optionsContainer">
+                        <div class="option-card" id="optionCard0" data-idx="0">
+                            <div class="option-badge">A</div>
+                            <div class="option-text" id="optionText0">COBOL</div>
+                        </div>
+                        <div class="option-card" id="optionCard1" data-idx="1">
+                            <div class="option-badge">B</div>
+                            <div class="option-text" id="optionText1">JavaScript</div>
+                        </div>
+                        <div class="option-card" id="optionCard2" data-idx="2">
+                            <div class="option-badge">C</div>
+                            <div class="option-text" id="optionText2">Fortran</div>
+                        </div>
+                        <div class="option-card" id="optionCard3" data-idx="3">
+                            <div class="option-badge">D</div>
+                            <div class="option-text" id="optionText3">Pascal</div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Pagination & Controls -->
+                    <div class="exam-footer">
+                        <button class="btn-nav" id="btnPrev">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Prev</span>
+                        </button>
+
+                        <!-- Number Pagination list (1, 2, 3... 10) -->
+                        <div class="pagination-list" id="paginationNumbers">
+                            <!-- Numbers -->
+                        </div>
+
+                        <button class="btn-nav" id="btnNext">
+                            <span>Next</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Right Area: Progress Gauge & Summary Sidebar -->
+                <aside class="card sidebar-card">
+                    <!-- Circular Progress Ring (Page 1 Style) -->
+                    <div class="gauge-container">
+                        <div class="circular-progress-wrapper">
+                            <svg class="progress-ring" width="160" height="160">
+                                <circle class="progress-ring-bg" stroke="#e6ede9" stroke-width="12" fill="transparent"
+                                    r="64" cx="80" cy="80" />
+                                <circle class="progress-ring-fill" id="progressCircle" stroke="#101828"
+                                    stroke-width="12" stroke-linecap="round" fill="transparent" r="64" cx="80"
+                                    cy="80" />
+                            </svg>
+                            <div class="gauge-center-content">
+                                <span class="gauge-score" id="answeredFraction">0/10</span>
+                                <span class="gauge-label">Completed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Legend / Summary Badges -->
+                    <div class="status-summary">
+                        <div class="status-item">
+                            <div class="status-indicator status-answered"></div>
+                            <span class="status-name">Answered</span>
+                            <strong class="status-count" id="countAnswered">0</strong>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-indicator status-review"></div>
+                            <span class="status-name">Marked for Review</span>
+                            <strong class="status-count" id="countReview">0</strong>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-indicator status-unanswered"></div>
+                            <span class="status-name">Unanswered</span>
+                            <strong class="status-count" id="countUnanswered">10</strong>
+                        </div>
+                    </div>
+
+                    <!-- Quick Jump Palette (Quizzy / Page 2 Style) -->
+                    <div class="palette-section">
+                        <div class="palette-header">
+                            <span>Question Palette</span>
+                            <span class="palette-hint">Click number to jump</span>
+                        </div>
+                        <div class="palette-grid" id="paletteGrid">
+                            <!-- Palette buttons -->
+                        </div>
+                    </div>
+
+                    <!-- Anti-cheat Reminder Info Box -->
+                    <div class="exam-info-box">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>+1 mark per question. No negative marking. Do not slide back or switch tabs.</span>
+                    </div>
+                </aside>
+
+            </main>
+
+            <!-- ================= SCREEN 6: RESULTS & PERFORMANCE DASHBOARD ================= -->
+            <section class="results-container hidden" id="resultsView">
+                <div class="results-card">
+                    <div class="results-hero">
+                        <div class="badge-status-pill" id="resultStatusBadge">
+                            <i class="fa-solid fa-check-circle"></i> Examination Completed
+                        </div>
+                        <h1 class="results-title">Assessment Performance Report</h1>
+                        <p class="results-subtitle" id="resultCandidateGreeting">Candidate: Vadla Bharath Chary | Hall
+                            Ticket: 121484156</p>
+                    </div>
+
+                    <!-- KPI Metric Cards (Page 7 style) -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon icon-score"><i class="fa-solid fa-trophy"></i></div>
+                            <div class="metric-data">
+                                <span class="metric-label">Total Score</span>
+                                <h3 class="metric-value" id="resScore">0 / 10</h3>
+                                <span class="metric-sub" id="resPercent">0% Score</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon icon-accuracy"><i class="fa-solid fa-bullseye"></i></div>
+                            <div class="metric-data">
+                                <span class="metric-label">Accuracy</span>
+                                <h3 class="metric-value" id="resAccuracy">0%</h3>
+                                <span class="metric-sub">Based on attempts</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card metric-card-clickable" id="resGradeMetricCard" title="Click to view how SGPA & CGPA are calculated">
+                            <div class="metric-icon icon-grade"><i class="fa-solid fa-award"></i></div>
+                            <div class="metric-data">
+                                <div class="metric-header-flex">
+                                    <span class="metric-label">Grade / SGPA</span>
+                                    <i class="fa-solid fa-circle-info metric-info-icon"></i>
+                                </div>
+                                <h3 class="metric-value" id="resGrade">A+</h3>
+                                <span class="metric-sub">View Calculation Formula &rarr;</span>
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-icon icon-time"><i class="fa-regular fa-clock"></i></div>
+                            <div class="metric-data">
+                                <span class="metric-label">Time Spent</span>
+                                <h3 class="metric-value" id="resTime">02:45</h3>
+                                <span class="metric-sub">Duration</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results View Switcher: Leaderboard vs Question Review -->
+                    <div class="results-view-tabs" id="resultsViewTabs">
+                        <button type="button" class="result-tab-btn active" id="btnTabLeaderboard">
+                            <i class="fa-solid fa-trophy"></i>
+                            <span>Class Merit Leaderboard</span>
+                            <span class="tab-counter-badge" id="resultsLeaderboardBadge">13</span>
+                        </button>
+                        <button type="button" class="result-tab-btn" id="btnTabReview">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            <span>Detailed Question Review</span>
+                            <span class="tab-counter-badge">10</span>
+                        </button>
+                    </div>
+
+                    <!-- 1. MERIT LEADERBOARD VIEW SECTION -->
+                    <div class="leaderboard-view-section" id="resultsLeaderboardSection">
+                        <!-- Personal Rank Spotlight Callout -->
+                        <div class="personal-rank-callout" id="personalRankCallout">
+                            <div class="rank-callout-icon">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div class="rank-callout-info">
+                                <h4 id="personalRankHeadline">🎉 Outstanding Performance!</h4>
+                                <p id="personalRankDetail">You secured <strong>Rank #1</strong> out of 13 Candidates with <strong>100% Score</strong> in 03:25!</p>
+                            </div>
+                            <div class="rank-callout-badge" id="personalRankBadge">
+                                <span>YOUR STANDING</span>
+                                <strong id="personalRankNumber">#1</strong>
+                            </div>
+                        </div>
+
+                        <!-- Top 3 Podium (1st, 2nd, 3rd) -->
+                        <div class="leaderboard-podium" id="leaderboardPodium">
+                            <!-- Populated dynamically: 2nd place, 1st place (center elevated), 3rd place -->
+                        </div>
+
+                        <!-- Full Leaderboard Table Container -->
+                        <div class="leaderboard-table-container">
+                            <div class="leaderboard-table-header">
+                                <h3><i class="fa-solid fa-ranking-star"></i> Real-Time Candidate Merit Standings</h3>
+                                <span class="table-badge">Academic Year 2026-27</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="leaderboard-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 80px;">Rank</th>
+                                            <th>Candidate Name</th>
+                                            <th>Student / Roll ID</th>
+                                            <th>Score</th>
+                                            <th>Percentage</th>
+                                            <th>Time Spent</th>
+                                            <th>Grade / SGPA</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leaderboardTableBody">
+                                        <!-- Populated dynamically by script.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. QUESTION BY QUESTION REVIEW SECTION -->
+                    <div class="breakdown-section hidden" id="resultsReviewSection">
+                        <div class="breakdown-header">
+                            <h3>Detailed Question Review</h3>
+                            <div class="filter-pills">
+                                <button class="filter-pill active" data-filter="all">All (10)</button>
+                                <button class="filter-pill" data-filter="correct"><i class="fa-solid fa-check"></i>
+                                    Correct (<span id="filterCorrectCount">0</span>)</button>
+                                <button class="filter-pill" data-filter="incorrect"><i class="fa-solid fa-xmark"></i>
+                                    Incorrect (<span id="filterWrongCount">0</span>)</button>
+                                <button class="filter-pill" data-filter="unanswered"><i class="fa-solid fa-minus"></i>
+                                    Skipped (<span id="filterSkippedCount">0</span>)</button>
+                            </div>
+                        </div>
+
+                        <div class="question-review-list" id="questionReviewList">
+                            <!-- Cards inserted by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="results-actions">
+                        <button class="btn-secondary" id="btnRetake">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>Retake Exam</span>
+                        </button>
+                        <button class="btn-secondary" id="btnLogoutResults">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout / Exit</span>
+                        </button>
+                        <button class="btn-primary" onclick="window.print()">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Download Report</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Floating Live Proctoring Webcam PiP Box -->
+        <div class="exam-proctor-pip hidden" id="examProctorPip">
+            <div class="pip-header">
+                <span class="pip-dot"></span>
+                <span>PROCTOR LIVE &bull; 🔴 REC</span>
+            </div>
+            <video id="examCamVideo" autoplay playsinline muted class="pip-video"></video>
+        </div>
+
+    </div>
+
+    <!-- ================= PRE-EXAM START CONFIRMATION MODAL ================= -->
+    <div class="modal-backdrop hidden" id="startExamConfirmModal">
+        <div class="modal-box">
+            <div class="modal-icon modal-icon-start">
+                <i class="fa-solid fa-play"></i>
+            </div>
+            <h3 class="modal-title">Confirm Examination Start?</h3>
+            <p class="modal-desc">
+                Are you sure you want to begin the examination? Once confirmed, the <strong>15-minute timer</strong>
+                begins immediately and the proctored assessment session will be launched.
+            </p>
+
+            <div class="modal-rules-reminder">
+                <div class="reminder-item">
+                    <i class="fa-solid fa-circle-check text-green"></i>
+                    <span>10 Questions (+1 mark each, no negative marks)</span>
+                </div>
+                <div class="reminder-item">
+                    <i class="fa-solid fa-video text-purple"></i>
+                    <span>Mandatory Live Camera Proctoring Active</span>
+                </div>
+                <div class="reminder-item">
+                    <i class="fa-solid fa-ban text-red"></i>
+                    <span>Do NOT press back, slide, or switch tabs</span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="btnCancelStartExam">
+                    <span>Review Instructions</span>
+                </button>
+                <button type="button" class="btn-modal-confirm" id="btnConfirmStartExam">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Confirm & Launch Exam</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SUBMIT CONFIRMATION MODAL ================= -->
+    <div class="modal-backdrop hidden" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+            <h3 class="modal-title">Ready to Submit Exam?</h3>
+            <p class="modal-desc">Are you sure you want to finalize your exam answers? You cannot change your choices
+                after submitting.</p>
+
+            <div class="modal-stats-preview">
+                <div class="preview-item">
+                    <span>Answered:</span>
+                    <strong id="modalAnsweredCount">0</strong>
+                </div>
+                <div class="preview-item">
+                    <span>Unanswered:</span>
+                    <strong id="modalUnansweredCount">10</strong>
+                </div>
+                <div class="preview-item">
+                    <span>Marked Review:</span>
+                    <strong id="modalReviewCount">0</strong>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="btnCancelSubmit">
+                    <span>Return to Exam</span>
+                </button>
+                <button type="button" class="btn-modal-confirm" id="btnConfirmSubmit">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Confirm & Submit</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= EXAMINER: CANDIDATE SCORE SLIP MODAL ================= -->
+    <div class="modal-backdrop hidden" id="studentScoreSlipModal">
+        <div class="modal-box score-slip-modal-box">
+            <div class="score-slip-header">
+                <div class="brand-header-flex">
+                    <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                    <span class="brand-logo">MRDU</span>
+                </div>
+                <span class="slip-badge"><i class="fa-solid fa-stamp"></i> Official Examination Slip</span>
+                <button type="button" class="btn-close-slip" id="btnCloseScoreSlip" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="score-slip-body" id="scoreSlipContent">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="btnCloseScoreSlip2">Close</button>
+                <button type="button" class="btn-modal-confirm" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print Scorecard Slip</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= EXAMINER: QUESTION EDIT / ADD MODAL ================= -->
+    <div class="modal-backdrop hidden" id="adminQuestionEditModal">
+        <div class="modal-box question-edit-modal-box">
+            <div class="score-slip-header">
+                <div class="brand-header-flex">
+                    <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                    <span class="brand-logo">MRDU</span>
+                </div>
+                <span class="slip-badge" id="qEditModalBadge"><i class="fa-solid fa-pen-to-square"></i> Question Editor</span>
+                <button type="button" class="btn-close-slip" id="btnCloseQEditModal" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div style="margin-top: 14px; text-align: left;">
+                <h3 id="qEditModalTitle" style="font-size: 18px; font-weight: 800; color: var(--brand-dark); margin-bottom: 4px;">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit Question Details
+                </h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Modify the question statement, four options, and designate the correct key.</p>
+            </div>
+
+            <form id="adminQuestionEditForm" onsubmit="event.preventDefault(); handleSaveQuestion();">
+                <input type="hidden" id="editQuestionId" value="">
+                
+                <div class="q-edit-grid">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label for="editQuestionCategory">
+                            <i class="fa-solid fa-layer-group"></i> Question Category / Domain
+                        </label>
+                        <input type="text" id="editQuestionCategory" class="form-control" required
+                            placeholder="e.g. Web Development, Programming, Data Science, Cyber Security">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label for="editQuestionText">
+                            <i class="fa-solid fa-circle-question"></i> Question Statement
+                        </label>
+                        <textarea id="editQuestionText" class="form-control" rows="3" required
+                            placeholder="Type the full question statement here..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editOption0">
+                            <i class="fa-solid fa-circle-dot" style="color: #2563eb;"></i> Option A
+                        </label>
+                        <input type="text" id="editOption0" class="form-control" required placeholder="Option A text">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editOption1">
+                            <i class="fa-solid fa-circle-dot" style="color: #2563eb;"></i> Option B
+                        </label>
+                        <input type="text" id="editOption1" class="form-control" required placeholder="Option B text">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editOption2">
+                            <i class="fa-solid fa-circle-dot" style="color: #2563eb;"></i> Option C
+                        </label>
+                        <input type="text" id="editOption2" class="form-control" required placeholder="Option C text">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editOption3">
+                            <i class="fa-solid fa-circle-dot" style="color: #2563eb;"></i> Option D
+                        </label>
+                        <input type="text" id="editOption3" class="form-control" required placeholder="Option D text">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editCorrectAnswer">
+                            <i class="fa-solid fa-circle-check text-green"></i> Correct Answer Key
+                        </label>
+                        <select id="editCorrectAnswer" class="form-control" required>
+                            <option value="0">Option A (First Option)</option>
+                            <option value="1">Option B (Second Option)</option>
+                            <option value="2">Option C (Third Option)</option>
+                            <option value="3">Option D (Fourth Option)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editQuestionMarks">
+                            <i class="fa-solid fa-award text-amber"></i> Marks Weightage
+                        </label>
+                        <input type="number" id="editQuestionMarks" class="form-control" value="1" min="1" max="10" required>
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label for="editExplanation">
+                            <i class="fa-solid fa-lightbulb text-amber"></i> Answer Explanation / Solution Note
+                        </label>
+                        <textarea id="editExplanation" class="form-control" rows="2"
+                            placeholder="Explanation shown on student scorecard analysis..."></textarea>
+                    </div>
+                </div>
+
+                <div id="qEditErrorMsg" class="login-error hidden" style="margin-top: 14px;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="qEditErrorText">Please fill all fields!</span>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 22px;">
+                    <button type="button" class="btn-modal-cancel" id="btnCancelQEdit">
+                        <span>Cancel</span>
+                    </button>
+                    <button type="submit" class="btn-modal-confirm" id="btnSubmitQEdit">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Save Question Changes</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= SGPA & CGPA CALCULATION & FORMULA GUIDE MODAL ================= -->
+    <div class="modal-backdrop hidden" id="sgpaFormulaModal">
+        <div class="modal-box sgpa-modal-box">
+            <div class="sgpa-modal-header">
+                <div class="sgpa-header-left">
+                    <div class="brand-header-flex">
+                        <img src="mrdu-logo.png" alt="MRDU Logo" class="brand-mini-logo">
+                        <span class="brand-logo">MRDU</span>
+                    </div>
+                    <div>
+                        <h3 class="sgpa-modal-title">SGPA & CGPA Calculation Guide</h3>
+                        <span class="sgpa-modal-subtitle">Malla Reddy Deemed To Be University Academic Evaluation System</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" id="btnCloseSgpaModal" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="sgpa-modal-scrollable">
+                <!-- 1. What is SGPA vs CGPA Card -->
+                <div class="sgpa-intro-card">
+                    <div class="sgpa-intro-item">
+                        <div class="intro-badge badge-sgpa">SGPA</div>
+                        <div>
+                            <strong>Semester Grade Point Average</strong>
+                            <p>Measures a student's academic performance in a <em>single semester</em> based on registered course credits and grade points earned.</p>
+                        </div>
+                    </div>
+                    <div class="sgpa-intro-item">
+                        <div class="intro-badge badge-cgpa">CGPA</div>
+                        <div>
+                            <strong>Cumulative Grade Point Average</strong>
+                            <p>Measures overall cumulative performance across <em>all completed semesters</em> up to the current academic year.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. FORMULA 1: SGPA Calculation -->
+                <div class="formula-card">
+                    <div class="formula-card-header">
+                        <span class="formula-tag tag-sgpa"><i class="fa-solid fa-calculator"></i> SGPA Formula</span>
+                        <h4>How to Calculate SGPA (Semester Grade Point Average)</h4>
+                    </div>
+                    <div class="formula-math-display">
+                        <div class="math-equation">
+                            <span class="math-var">SGPA</span>
+                            <span class="math-op">=</span>
+                            <div class="math-fraction">
+                                <span class="fraction-top">&Sigma; (C<sub>i</sub> &times; G<sub>i</sub>)</span>
+                                <span class="fraction-bar"></span>
+                                <span class="fraction-bottom">&Sigma; C<sub>i</sub></span>
+                            </div>
+                            <span class="math-op">=</span>
+                            <div class="math-fraction">
+                                <span class="fraction-top">(C<sub>1</sub>&times;G<sub>1</sub>) + (C<sub>2</sub>&times;G<sub>2</sub>) + ... + (C<sub>n</sub>&times;G<sub>n</sub>)</span>
+                                <span class="fraction-bar"></span>
+                                <span class="fraction-bottom">C<sub>1</sub> + C<sub>2</sub> + ... + C<sub>n</sub></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formula-terms">
+                        <div class="term-item"><strong>C<sub>i</sub></strong> = Credits assigned to the i<sup>th</sup> course (e.g., Theory = 3 or 4, Lab = 1.5 or 2)</div>
+                        <div class="term-item"><strong>G<sub>i</sub></strong> = Grade Point (10 to 0) secured in that course</div>
+                        <div class="term-item"><strong>&Sigma; C<sub>i</sub></strong> = Total credits registered in the semester</div>
+                    </div>
+
+                    <!-- Practical SGPA Example -->
+                    <div class="formula-example-box">
+                        <h5><i class="fa-solid fa-lightbulb"></i> Step-by-Step SGPA Calculation Example:</h5>
+                        <div class="table-responsive">
+                            <table class="example-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject / Course</th>
+                                        <th>Credits (C)</th>
+                                        <th>Letter Grade</th>
+                                        <th>Grade Point (G)</th>
+                                        <th>Credit Points (C &times; G)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Web Technologies</td>
+                                        <td><strong>4</strong></td>
+                                        <td><span class="badge-grade badge-grade-o">O</span></td>
+                                        <td>10</td>
+                                        <td>4 &times; 10 = <strong>40</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Data Structures</td>
+                                        <td><strong>4</strong></td>
+                                        <td><span class="badge-grade badge-grade-a">A+</span></td>
+                                        <td>9</td>
+                                        <td>4 &times; 9 = <strong>36</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Operating Systems</td>
+                                        <td><strong>3</strong></td>
+                                        <td><span class="badge-grade badge-grade-a">A</span></td>
+                                        <td>8</td>
+                                        <td>3 &times; 8 = <strong>24</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Database Systems</td>
+                                        <td><strong>3</strong></td>
+                                        <td><span class="badge-grade badge-grade-b">B+</span></td>
+                                        <td>7</td>
+                                        <td>3 &times; 7 = <strong>21</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Full-Stack Web Lab</td>
+                                        <td><strong>2</strong></td>
+                                        <td><span class="badge-grade badge-grade-o">O</span></td>
+                                        <td>10</td>
+                                        <td>2 &times; 10 = <strong>20</strong></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Total Semester Credits (&Sigma;C)</th>
+                                        <th>16</th>
+                                        <th colspan="2">Total Credit Points (&Sigma;[C&times;G])</th>
+                                        <th>141 Points</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="example-solution-pill">
+                            <strong>Calculation:</strong> SGPA = 141 &divide; 16 = <span class="highlight-result">8.81 SGPA</span> (Grade: A+ Distinction)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. FORMULA 2: CGPA Calculation -->
+                <div class="formula-card">
+                    <div class="formula-card-header">
+                        <span class="formula-tag tag-cgpa"><i class="fa-solid fa-graduation-cap"></i> CGPA Formula</span>
+                        <h4>How to Calculate CGPA (Cumulative Grade Point Average)</h4>
+                    </div>
+                    <div class="formula-math-display">
+                        <div class="math-equation">
+                            <span class="math-var">CGPA</span>
+                            <span class="math-op">=</span>
+                            <div class="math-fraction">
+                                <span class="fraction-top">&Sigma; (S<sub>j</sub> &times; C<sub>j</sub>)</span>
+                                <span class="fraction-bar"></span>
+                                <span class="fraction-bottom">&Sigma; C<sub>j</sub></span>
+                            </div>
+                            <span class="math-op">=</span>
+                            <div class="math-fraction">
+                                <span class="fraction-top">(SGPA<sub>1</sub>&times;C<sub>1</sub>) + (SGPA<sub>2</sub>&times;C<sub>2</sub>) + ... + (SGPA<sub>m</sub>&times;C<sub>m</sub>)</span>
+                                <span class="fraction-bar"></span>
+                                <span class="fraction-bottom">C<sub>1</sub> + C<sub>2</sub> + ... + C<sub>m</sub></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formula-terms">
+                        <div class="term-item"><strong>S<sub>j</sub></strong> = SGPA secured in semester j</div>
+                        <div class="term-item"><strong>C<sub>j</sub></strong> = Total credits earned in semester j</div>
+                        <div class="term-item"><strong>&Sigma; C<sub>j</sub></strong> = Total credits across all semesters taken so far</div>
+                    </div>
+                    <div class="example-solution-pill" style="margin-top: 14px;">
+                        <strong>Quick CGPA Example:</strong> Sem 1 (SGPA 8.5, 20 Credits) &bull; Sem 2 (SGPA 9.0, 20 Credits) &rarr; Total Points = (8.5&times;20) + (9.0&times;20) = 170 + 180 = 350. <br>
+                        <strong>CGPA = 350 &divide; 40 = <span class="highlight-result">8.75 CGPA</span></strong>
+                    </div>
+                </div>
+
+                <!-- 4. MRDU 10-Point Letter Grading Scale Table -->
+                <div class="grading-scale-card">
+                    <h4><i class="fa-solid fa-table-list"></i> Official MRDU 10-Point Academic Grading Scale</h4>
+                    <div class="table-responsive">
+                        <table class="scale-table">
+                            <thead>
+                                <tr>
+                                    <th>Percentage of Marks</th>
+                                    <th>Letter Grade</th>
+                                    <th>Grade Point (G)</th>
+                                    <th>Performance Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>90% &ndash; 100%</strong></td>
+                                    <td><span class="badge-grade badge-grade-o">O</span></td>
+                                    <td><strong>10</strong></td>
+                                    <td>Outstanding (Distinction)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>80% &ndash; 89%</strong></td>
+                                    <td><span class="badge-grade badge-grade-a">A+</span></td>
+                                    <td><strong>9</strong></td>
+                                    <td>Excellent</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>70% &ndash; 79%</strong></td>
+                                    <td><span class="badge-grade badge-grade-a">A</span></td>
+                                    <td><strong>8</strong></td>
+                                    <td>Very Good</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>60% &ndash; 69%</strong></td>
+                                    <td><span class="badge-grade badge-grade-b">B+</span></td>
+                                    <td><strong>7</strong></td>
+                                    <td>Good</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>50% &ndash; 59%</strong></td>
+                                    <td><span class="badge-grade badge-grade-b">B</span></td>
+                                    <td><strong>6</strong></td>
+                                    <td>Above Average</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>40% &ndash; 49%</strong></td>
+                                    <td><span class="badge-grade badge-grade-b" style="background:#fef3c7; color:#92400e;">C</span></td>
+                                    <td><strong>5</strong></td>
+                                    <td>Pass</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Below 40%</strong></td>
+                                    <td><span class="badge-grade badge-grade-f">F</span></td>
+                                    <td><strong>0</strong></td>
+                                    <td>Fail / Reappear</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5. Percentage to CGPA Conversion Formula -->
+                <div class="conversion-formula-box">
+                    <div class="conversion-icon"><i class="fa-solid fa-percent"></i></div>
+                    <div class="conversion-details">
+                        <h4>Percentage &harr; CGPA Conversion Formula</h4>
+                        <p>According to AICTE / University Guidelines:</p>
+                        <div class="conv-eq-pill">
+                            <strong>Equivalent Percentage (%) = (CGPA &minus; 0.75) &times; 10</strong>
+                        </div>
+                        <small>Example: If CGPA is 8.5 &rarr; (8.5 &minus; 0.75) &times; 10 = <strong>77.5%</strong></small>
+                    </div>
+                </div>
+
+                <!-- 6. LIVE INTERACTIVE SGPA MINI CALCULATOR -->
+                <div class="interactive-calc-card">
+                    <div class="interactive-calc-header">
+                        <h4><i class="fa-solid fa-wand-magic-sparkles"></i> Try Live SGPA Calculator</h4>
+                        <span>Enter your course credits & grades to test</span>
+                    </div>
+
+                    <div class="calc-inputs-grid">
+                        <div class="calc-row">
+                            <span class="calc-row-title">Subject 1:</span>
+                            <input type="number" id="calcC1" class="calc-input" value="4" min="1" max="6" title="Credits" placeholder="Credits">
+                            <select id="calcG1" class="calc-select">
+                                <option value="10">Grade O (10)</option>
+                                <option value="9" selected>Grade A+ (9)</option>
+                                <option value="8">Grade A (8)</option>
+                                <option value="7">Grade B+ (7)</option>
+                                <option value="6">Grade B (6)</option>
+                                <option value="5">Grade C (5)</option>
+                                <option value="0">Grade F (0)</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-row">
+                            <span class="calc-row-title">Subject 2:</span>
+                            <input type="number" id="calcC2" class="calc-input" value="4" min="1" max="6" title="Credits" placeholder="Credits">
+                            <select id="calcG2" class="calc-select">
+                                <option value="10" selected>Grade O (10)</option>
+                                <option value="9">Grade A+ (9)</option>
+                                <option value="8">Grade A (8)</option>
+                                <option value="7">Grade B+ (7)</option>
+                                <option value="6">Grade B (6)</option>
+                                <option value="5">Grade C (5)</option>
+                                <option value="0">Grade F (0)</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-row">
+                            <span class="calc-row-title">Subject 3:</span>
+                            <input type="number" id="calcC3" class="calc-input" value="3" min="1" max="6" title="Credits" placeholder="Credits">
+                            <select id="calcG3" class="calc-select">
+                                <option value="10">Grade O (10)</option>
+                                <option value="9">Grade A+ (9)</option>
+                                <option value="8" selected>Grade A (8)</option>
+                                <option value="7">Grade B+ (7)</option>
+                                <option value="6">Grade B (6)</option>
+                                <option value="5">Grade C (5)</option>
+                                <option value="0">Grade F (0)</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-row">
+                            <span class="calc-row-title">Subject 4:</span>
+                            <input type="number" id="calcC4" class="calc-input" value="3" min="1" max="6" title="Credits" placeholder="Credits">
+                            <select id="calcG4" class="calc-select">
+                                <option value="10">Grade O (10)</option>
+                                <option value="9">Grade A+ (9)</option>
+                                <option value="8">Grade A (8)</option>
+                                <option value="7" selected>Grade B+ (7)</option>
+                                <option value="6">Grade B (6)</option>
+                                <option value="5">Grade C (5)</option>
+                                <option value="0">Grade F (0)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="calc-result-box">
+                        <button type="button" class="btn-calculate" id="btnRunLiveCalc">
+                            <i class="fa-solid fa-calculator"></i> Calculate Instant SGPA
+                        </button>
+                        <div class="calc-live-output" id="calcLiveOutput">
+                            <span>Calculated SGPA:</span>
+                            <strong id="liveSgpaResult">8.71 / 10.0</strong>
+                            <small id="liveSgpaGrade">Grade A+ (Excellent)</small>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-actions" style="margin-top: 18px;">
+                <button type="button" class="btn-modal-cancel" id="btnCloseSgpaModal2">Close Guide</button>
+                <button type="button" class="btn-modal-confirm" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print SGPA/CGPA Guide</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

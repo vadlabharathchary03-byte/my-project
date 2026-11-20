@@ -1,0 +1,19 @@
+{
+  "name": "mrdu-exam-portal",
+  "version": "1.0.0",
+  "description": "MRDU - Malla Reddy Deemed To Be University Online Assessment & Examination Portal with Live Proctoring Backend",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "backend": "node backend/server.js"
+  },
+  "keywords": [
+    "examination-portal",
+    "proctoring",
+    "assessment",
+    "mrdu"
+  ],
+  "author": "MRDU Directorate of Evaluation",
+  "license": "ISC"
+}

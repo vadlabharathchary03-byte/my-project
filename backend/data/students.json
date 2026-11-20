@@ -1,0 +1,74 @@
+[
+  {
+    "id": "26HEU05R001",
+    "name": "Sai Pranay Reddy",
+    "dept": "CSE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R002",
+    "name": "Ananya Sharma",
+    "dept": "CSE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R003",
+    "name": "Rohit Varma",
+    "dept": "AI & ML",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R004",
+    "name": "Sneha Latha",
+    "dept": "IT",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R005",
+    "name": "Keerthi Rao",
+    "dept": "ECE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R006",
+    "name": "Vikramaditya P",
+    "dept": "CSE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R007",
+    "name": "Pooja Hegde",
+    "dept": "IT",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R008",
+    "name": "Akhil Goud",
+    "dept": "ECE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R009",
+    "name": "Divya Teja",
+    "dept": "CSE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R010",
+    "name": "Manoj Kumar",
+    "dept": "AI & ML",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R011",
+    "name": "Bhavani Prasad",
+    "dept": "CSE",
+    "password": "password123"
+  },
+  {
+    "id": "26HEU05R012",
+    "name": "Karthik Raj",
+    "dept": "IT",
+    "password": "password123"
+  }
+]

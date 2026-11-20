@@ -1,0 +1,18 @@
+{
+  "name": "mrdu-exam-backend",
+  "version": "1.0.0",
+  "description": "MRDU Online Examination Backend Server & REST API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "examination-portal",
+    "proctoring",
+    "backend",
+    "mrdu"
+  ],
+  "author": "MRDU Directorate of Evaluation",
+  "license": "ISC"
+}

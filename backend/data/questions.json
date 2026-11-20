@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "category": "Web Development",
+    "question": "Which of the following is a popular programming language primarily used for developing interactive and multimedia web pages?",
+    "options": [
+      "COBOL",
+      "JavaScript",
+      "Fortran",
+      "Pascal"
+    ],
+    "correctAnswer": 1,
+    "explanation": "JavaScript is the primary programming language of the web, enabling dynamic interactive content, animations, and multimedia features."
+  },
+  {
+    "id": 2,
+    "category": "Frontend Architecture",
+    "question": "Which HTML5 element is specifically used for drawing graphics and interactive animations on the fly via scripting?",
+    "options": [
+      "<canvas>",
+      "<svg>",
+      "<section>",
+      "<figure>"
+    ],
+    "correctAnswer": 0,
+    "explanation": "The <canvas> element provides an API for rendering bitmapped 2D/3D graphics and games directly inside the browser using JavaScript."
+  },
+  {
+    "id": 3,
+    "category": "CSS3 Styling",
+    "question": "In CSS Flexbox, which property is used to align flex items along the cross axis?",
+    "options": [
+      "justify-content",
+      "align-items",
+      "flex-direction",
+      "flex-wrap"
+    ],
+    "correctAnswer": 1,
+    "explanation": "'align-items' aligns items along the cross axis (vertical by default in a row), while 'justify-content' aligns along the main axis."
+  },
+  {
+    "id": 4,
+    "category": "JavaScript Core",
+    "question": "What will the expression `typeof null` return in modern JavaScript?",
+    "options": [
+      "'null'",
+      "'undefined'",
+      "'object'",
+      "'boolean'"
+    ],
+    "correctAnswer": 2,
+    "explanation": "In JavaScript, `typeof null` returns 'object'. This is a legacy bug originating in the very first version of JavaScript and is kept for backward compatibility."
+  },
+  {
+    "id": 5,
+    "category": "Web APIs",
+    "question": "Which browser API provides a clean, promise-based interface for making asynchronous HTTP requests?",
+    "options": [
+      "XMLHttpRequest",
+      "Fetch API",
+      "WebSockets",
+      "Service Worker API"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The Fetch API provides a modern, promise-based standard mechanism for fetching network resources across the web."
+  },
+  {
+    "id": 6,
+    "category": "Performance & Storage",
+    "question": "Which client-side storage mechanism persists data across browser sessions and has no expiration date unless cleared manually?",
+    "options": [
+      "sessionStorage",
+      "localStorage",
+      "HTTP Cookies",
+      "Memory Cache"
+    ],
+    "correctAnswer": 1,
+    "explanation": "localStorage persists key-value pairs without expiration, whereas sessionStorage is cleared when the browser tab closes."
+  },
+  {
+    "id": 7,
+    "category": "Backend & HTTP",
+    "question": "Which HTTP status code signifies that a requested resource was successfully created on the server?",
+    "options": [
+      "200 OK",
+      "201 Created",
+      "204 No Content",
+      "304 Not Modified"
+    ],
+    "correctAnswer": 1,
+    "explanation": "HTTP 201 Created indicates that the request succeeded and resulted in one or more new resources being created (typically via POST)."
+  },
+  {
+    "id": 8,
+    "category": "Data Structures",
+    "question": "Which data structure operates on a Strict First-In, First-Out (FIFO) principle?",
+    "options": [
+      "Stack",
+      "Queue",
+      "Binary Search Tree",
+      "Heap"
+    ],
+    "correctAnswer": 1,
+    "explanation": "A Queue processes elements in First-In, First-Out (FIFO) order, similar to people standing in a physical checkout line."
+  },
+  {
+    "id": 9,
+    "category": "Security",
+    "question": "What security mechanism prevents a malicious website from making unauthorized cross-origin requests using a logged-in user's credentials?",
+    "options": [
+      "CORS (Cross-Origin Resource Sharing)",
+      "Same-Origin Policy (SOP)",
+      "DNSSEC",
+      "SSL/TLS Handshake"
+    ],
+    "correctAnswer": 1,
+    "explanation": "The Same-Origin Policy (SOP) is a core web security concept that restricts scripts on one origin from accessing sensitive resources on another."
+  },
+  {
+    "id": 10,
+    "category": "Modern Tooling",
+    "question": "What is the primary role of a bundler like Vite or Webpack in modern web development?",
+    "options": [
+      "Hosting databases in the cloud",
+      "Combining, transforming, and optimizing code modules for production deployment",
+      "Running automated unit tests only",
+      "Managing server DNS records"
+    ],
+    "correctAnswer": 1,
+    "explanation": "Module bundlers package JavaScript, CSS, images, and other assets into optimized bundles suitable for web browsers."
+  }
+]
