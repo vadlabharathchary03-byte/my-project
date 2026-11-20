@@ -15,5 +15,8 @@
     "mrdu"
   ],
   "author": "MRDU Directorate of Evaluation",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.23.1"
+  }
 }
