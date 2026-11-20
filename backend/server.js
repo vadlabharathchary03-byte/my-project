@@ -15,7 +15,8 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT, 10) || 3000;
+const HOST = '0.0.0.0';
 const PUBLIC_DIR = fs.existsSync(path.join(__dirname, '..', 'frontend'))
     ? path.join(__dirname, '..', 'frontend')
     : (fs.existsSync(path.join(__dirname, 'frontend')) ? path.join(__dirname, 'frontend') : __dirname);
@@ -345,129 +346,187 @@ let pgPool = null;
 let dbReady = false;
 
 async function initDatabase() {
-    const dbUrl = process.env.DATABASE_URL;
+    console.log("[STARTUP] Step 1: Checking environment variables and runtime...");
+    console.log(`[STARTUP] - Target Host: ${HOST}`);
+    console.log(`[STARTUP] - Port: ${PORT}`);
+    
+    let rawDbUrl = process.env.DATABASE_URL;
+    let dbUrl = rawDbUrl ? rawDbUrl.trim() : null;
+
     if (!dbUrl) {
-        console.log("💾 Running in Local File Store Mode (DATABASE_URL not set).");
+        console.log("[STARTUP] - DATABASE_URL is not set. Operating in local JSON file persistence mode.");
         return;
     }
+
+    // Step 1b: Convert postgres:// to postgresql:// if driver requires it
+    if (dbUrl.startsWith('postgres://')) {
+        console.log("[STARTUP] - Normalizing database URL protocol (postgres:// -> postgresql://)...");
+        dbUrl = dbUrl.replace(/^postgres:\/\//, 'postgresql://');
+    }
+    console.log("[STARTUP] - DATABASE_URL detected (credentials hidden). Initializing PostgreSQL pool...");
 
     try {
         let Pool;
         try {
             Pool = require('pg').Pool;
         } catch (e) {
-            console.warn("⚠️ 'pg' module not installed in this environment. Falling back to File Store.");
+            console.warn("[STARTUP] ⚠️ 'pg' module not installed in this environment. Falling back to local File Store:", e.message);
             return;
         }
 
         const isLocalPg = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
         pgPool = new Pool({
             connectionString: dbUrl,
-            ssl: isLocalPg ? false : { rejectUnauthorized: false }
+            ssl: isLocalPg ? false : { rejectUnauthorized: false },
+            connectionTimeoutMillis: 10000
         });
 
+        console.log("[STARTUP] Step 2: Testing PostgreSQL connection...");
         const client = await pgPool.connect();
-        console.log("🐘 Successfully connected to PostgreSQL Database!");
+        console.log("[STARTUP] ✅ PostgreSQL connection established successfully!");
 
-        // Create Tables
-        await client.query(`
-            CREATE TABLE IF NOT EXISTS students (
-                id VARCHAR(50) PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                dept VARCHAR(255),
-                password VARCHAR(255) NOT NULL,
-                registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
+        console.log("[STARTUP] Step 3: Running safe auto-migrations (CREATE TABLE IF NOT EXISTS)...");
 
-            CREATE TABLE IF NOT EXISTS questions (
-                id INT PRIMARY KEY,
-                category VARCHAR(100),
-                question TEXT NOT NULL,
-                options JSONB NOT NULL,
-                correct_answer INT NOT NULL,
-                explanation TEXT
-            );
+        // Table 1: students
+        try {
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS students (
+                    id VARCHAR(50) PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    dept VARCHAR(255),
+                    password VARCHAR(255) NOT NULL,
+                    registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+            console.log("[STARTUP] - Table 'students': Verified/Ready");
+        } catch (tableErr) {
+            console.warn("[STARTUP] Notice verifying 'students' table:", tableErr.message);
+        }
 
-            CREATE TABLE IF NOT EXISTS attempts (
-                id VARCHAR(50) PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                score INT NOT NULL,
-                total INT NOT NULL,
-                percentage INT NOT NULL,
-                accuracy INT NOT NULL,
-                time_spent_seconds INT,
-                time_spent_str VARCHAR(50),
-                grade VARCHAR(50),
-                status VARCHAR(20),
-                timestamp VARCHAR(100),
-                tab_switch_count INT DEFAULT 0,
-                user_answers JSONB,
-                marked_for_review JSONB,
-                proctor_video_url TEXT,
-                is_current_user BOOLEAN DEFAULT false,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
+        // Table 2: questions
+        try {
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS questions (
+                    id INT PRIMARY KEY,
+                    category VARCHAR(100),
+                    question TEXT NOT NULL,
+                    options JSONB NOT NULL,
+                    correct_answer INT NOT NULL,
+                    explanation TEXT
+                );
+            `);
+            console.log("[STARTUP] - Table 'questions': Verified/Ready");
+        } catch (tableErr) {
+            console.warn("[STARTUP] Notice verifying 'questions' table:", tableErr.message);
+        }
 
-            CREATE TABLE IF NOT EXISTS recordings (
-                id SERIAL PRIMARY KEY,
-                student_id VARCHAR(50),
-                filename VARCHAR(255),
-                video_base64 TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `);
+        // Table 3: attempts
+        try {
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS attempts (
+                    id VARCHAR(50) PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    score INT NOT NULL,
+                    total INT NOT NULL,
+                    percentage INT NOT NULL,
+                    accuracy INT NOT NULL,
+                    time_spent_seconds INT,
+                    time_spent_str VARCHAR(50),
+                    grade VARCHAR(50),
+                    status VARCHAR(20),
+                    timestamp VARCHAR(100),
+                    tab_switch_count INT DEFAULT 0,
+                    user_answers JSONB,
+                    marked_for_review JSONB,
+                    proctor_video_url TEXT,
+                    is_current_user BOOLEAN DEFAULT false,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+            console.log("[STARTUP] - Table 'attempts': Verified/Ready");
+        } catch (tableErr) {
+            console.warn("[STARTUP] Notice verifying 'attempts' table:", tableErr.message);
+        }
+
+        // Table 4: recordings
+        try {
+            await client.query(`
+                CREATE TABLE IF NOT EXISTS recordings (
+                    id SERIAL PRIMARY KEY,
+                    student_id VARCHAR(50),
+                    filename VARCHAR(255),
+                    video_base64 TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+            console.log("[STARTUP] - Table 'recordings': Verified/Ready");
+        } catch (tableErr) {
+            console.warn("[STARTUP] Notice verifying 'recordings' table:", tableErr.message);
+        }
 
         // Seed students if empty
-        const stdRes = await client.query('SELECT COUNT(*) FROM students');
-        if (parseInt(stdRes.rows[0].count, 10) === 0) {
-            console.log("🌱 Seeding initial students into PostgreSQL...");
-            for (const s of DEFAULT_STUDENTS) {
-                await client.query(
-                    'INSERT INTO students (id, name, dept, password) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING',
-                    [s.id, s.name, s.dept, s.password || 'student123']
-                );
+        try {
+            const stdRes = await client.query('SELECT COUNT(*) FROM students');
+            if (parseInt(stdRes.rows[0].count, 10) === 0) {
+                console.log("[STARTUP] - Seeding default students...");
+                for (const s of DEFAULT_STUDENTS) {
+                    await client.query(
+                        'INSERT INTO students (id, name, dept, password) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING',
+                        [s.id, s.name, s.dept, s.password || 'student123']
+                    );
+                }
             }
+        } catch (seedErr) {
+            console.warn("[STARTUP] Notice seeding students:", seedErr.message);
         }
 
         // Seed questions if empty
-        const qRes = await client.query('SELECT COUNT(*) FROM questions');
-        if (parseInt(qRes.rows[0].count, 10) === 0) {
-            console.log("🌱 Seeding initial questions into PostgreSQL...");
-            for (const q of DEFAULT_QUESTIONS) {
-                await client.query(
-                    'INSERT INTO questions (id, category, question, options, correct_answer, explanation) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING',
-                    [q.id, q.category, q.question, JSON.stringify(q.options), q.correctAnswer, q.explanation]
-                );
+        try {
+            const qRes = await client.query('SELECT COUNT(*) FROM questions');
+            if (parseInt(qRes.rows[0].count, 10) === 0) {
+                console.log("[STARTUP] - Seeding default questions...");
+                for (const q of DEFAULT_QUESTIONS) {
+                    await client.query(
+                        'INSERT INTO questions (id, category, question, options, correct_answer, explanation) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING',
+                        [q.id, q.category, q.question, JSON.stringify(q.options), q.correctAnswer, q.explanation]
+                    );
+                }
             }
+        } catch (seedErr) {
+            console.warn("[STARTUP] Notice seeding questions:", seedErr.message);
         }
 
         // Seed attempts if empty
-        const attRes = await client.query('SELECT COUNT(*) FROM attempts');
-        if (parseInt(attRes.rows[0].count, 10) === 0) {
-            console.log("🌱 Seeding initial attempts into PostgreSQL...");
-            for (const a of DEFAULT_ATTEMPTS) {
-                await client.query(`
-                    INSERT INTO attempts (id, name, score, total, percentage, accuracy, time_spent_seconds, time_spent_str, grade, status, timestamp, tab_switch_count, user_answers, marked_for_review, proctor_video_url, is_current_user)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-                    ON CONFLICT (id) DO NOTHING
-                `, [
-                    a.id, a.name, a.score, a.total, a.percentage, a.accuracy,
-                    a.timeSpentSeconds, a.timeSpentStr, a.grade, a.status,
-                    a.timestamp, a.tabSwitchCount || 0,
-                    JSON.stringify(a.userAnswers || []),
-                    JSON.stringify(a.markedForReview || []),
-                    a.proctorVideoUrl || null,
-                    a.isCurrentUser || false
-                ]);
+        try {
+            const attRes = await client.query('SELECT COUNT(*) FROM attempts');
+            if (parseInt(attRes.rows[0].count, 10) === 0) {
+                console.log("[STARTUP] - Seeding default attempts...");
+                for (const a of DEFAULT_ATTEMPTS) {
+                    await client.query(`
+                        INSERT INTO attempts (id, name, score, total, percentage, accuracy, time_spent_seconds, time_spent_str, grade, status, timestamp, tab_switch_count, user_answers, marked_for_review, proctor_video_url, is_current_user)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                        ON CONFLICT (id) DO NOTHING
+                    `, [
+                        a.id, a.name, a.score, a.total, a.percentage, a.accuracy,
+                        a.timeSpentSeconds, a.timeSpentStr, a.grade, a.status,
+                        a.timestamp, a.tabSwitchCount || 0,
+                        JSON.stringify(a.userAnswers || []),
+                        JSON.stringify(a.markedForReview || []),
+                        a.proctorVideoUrl || null,
+                        a.isCurrentUser || false
+                    ]);
+                }
             }
+        } catch (seedErr) {
+            console.warn("[STARTUP] Notice seeding attempts:", seedErr.message);
         }
 
         client.release();
         dbReady = true;
-        console.log("✅ PostgreSQL Database Initialized & Synced Successfully!");
+        console.log("[STARTUP] ✅ PostgreSQL Database Initialized & Synced Successfully!");
     } catch (err) {
-        console.error("⚠️ PostgreSQL Connection / Migration Error:", err.message);
-        console.log("📁 Falling back to local file system store.");
+        console.error("[STARTUP] ❌ PostgreSQL Connection Notice:", err.message);
+        console.log("[STARTUP] 📁 Gracefully falling back to local file system store without crashing.");
         dbReady = false;
     }
 }
@@ -982,13 +1041,14 @@ const server = http.createServer(async (req, res) => {
 // ========================================================
 // START SERVER
 // ========================================================
+console.log(`[STARTUP] Step 4: Binding HTTP Server to ${HOST}:${PORT}...`);
 initDatabase().finally(() => {
-    server.listen(PORT, '0.0.0.0', () => {
+    server.listen(PORT, HOST, () => {
         console.log('========================================================');
         console.log('🏛️  MALLA REDDY (MR) DEEMED TO BE UNIVERSITY');
         console.log('🎓 Directorate of Evaluation & Online Examination Portal');
         console.log('========================================================');
-        console.log(`🚀 Server Running at: http://0.0.0.0:${PORT}`);
+        console.log(`🚀 [STARTUP] Server successfully listening at: http://${HOST}:${PORT}`);
         console.log(`🗄️  Active Database: ${dbReady ? '🐘 PostgreSQL (Live Cloud DB)' : '💾 Local File Store'}`);
         console.log(`📁 Static Web Files: ${PUBLIC_DIR}`);
         console.log('--------------------------------------------------------');
