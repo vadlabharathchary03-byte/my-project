@@ -931,8 +931,27 @@ const server = http.createServer(async (req, res) => {
         safePath = 'index.html';
     }
 
-    let filePath;
+    // Check in database or recordings dir
     if (safePath.startsWith('/recordings/') || safePath.startsWith('\\recordings\\')) {
+        const filename = path.basename(safePath);
+        if (dbReady && pgPool) {
+            try {
+                const recRes = await pgPool.query('SELECT video_base64 FROM recordings WHERE filename = $1 LIMIT 1', [filename]);
+                if (recRes.rows.length > 0 && recRes.rows[0].video_base64) {
+                    const raw = recRes.rows[0].video_base64.replace(/^data:video\/\w+;base64,/, '');
+                    const buf = Buffer.from(raw, 'base64');
+                    res.writeHead(200, {
+                        'Content-Type': 'video/webm',
+                        'Content-Length': buf.length,
+                        'Access-Control-Allow-Origin': '*',
+                        'Cache-Control': 'no-cache'
+                    });
+                    return res.end(buf);
+                }
+            } catch (e) {
+                console.warn("DB recording fetch warning:", e.message);
+            }
+        }
         filePath = path.join(DATA_DIR, safePath);
     } else {
         filePath = path.join(PUBLIC_DIR, safePath);
